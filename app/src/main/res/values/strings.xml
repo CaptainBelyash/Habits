@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">HabitsApp</string>
+    <string name="main_title">Мои привычки</string>
+    <string name="open_drawer">Drawer opened</string>
+    <string name="close_drawer">Drawer closed</string>
+    <string-array name="priorities">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+    <string name="about">Made by Belyaev Ilya</string>
+</resources>
