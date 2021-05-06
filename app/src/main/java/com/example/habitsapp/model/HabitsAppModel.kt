@@ -25,11 +25,11 @@ object HabitsAppModel{
         return habitsDao.getById(id)
     }
 
-    fun insert(habit: HabitEntity){
+    suspend fun insert(habit: HabitEntity){
         habitsDao.insertAll(habit)
     }
 
-    fun delete(habit: HabitEntity){
+    suspend fun delete(habit: HabitEntity){
         habitsDao.delete(habit)
     }
 }

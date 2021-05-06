@@ -17,7 +17,7 @@ abstract class HabitsDB : RoomDatabase() {
                     context.applicationContext,
                     HabitsDB::class.java,
                     "HabitsDB"
-                ).allowMainThreadQueries().build()
+                ).build()
                 INSTANCE = instance
 
                 instance
