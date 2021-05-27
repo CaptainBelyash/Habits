@@ -10,8 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.habitsapp.R
 import com.example.habitsapp.adapters.HabitsViewAdapter
-import com.example.habitsapp.model.HabitsAppModel
-import com.example.habitsapp.model.database.HabitsDB
+import com.example.habitsapp.MainActivity
 import com.example.habitsapp.viewmodels.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_habits_list.*
 import java.util.*
@@ -33,9 +32,10 @@ class HabitsListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val usecases = (requireActivity() as MainActivity).appComponent.getHabitsUseCases()
         viewModel = ViewModelProvider(activity!!, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return HomeViewModel(HabitsAppModel.withDao(HabitsDB.getDatabase(requireContext()).habitsDao())) as T
+                return HomeViewModel(usecases) as T
             }
         }).get(HomeViewModel::class.java)
     }
@@ -61,9 +61,9 @@ class HabitsListFragment : Fragment() {
 
     }
 
-    fun handleRVClick(habitId: Int){
+    fun handleRVClick(habitId: String){
         val bundle = Bundle().apply {
-            putInt("habitId", habitId)
+            putString("habitId", habitId)
         }
         findNavController().navigate(R.id.action_homeFragment_to_editorFragment, bundle)
     }

@@ -1,19 +1,18 @@
 package com.example.habitsapp.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.habitsapp.adapters.HabitsViewAdapter
-import com.example.habitsapp.model.HabitsAppModel
-import com.example.habitsapp.model.database.HabitEntity
-import kotlinx.android.synthetic.main.fragment_habits_list.*
+import com.example.domainmodule.HabitsUseCases
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
+import java.util.*
 import kotlin.coroutines.CoroutineContext
+import androidx.lifecycle.asLiveData
 
-class EditorViewModel(private val model: HabitsAppModel) : ViewModel(), CoroutineScope {
+class EditorViewModel(private val useCases: HabitsUseCases)
+    : ViewModel(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO
 
@@ -22,23 +21,28 @@ class EditorViewModel(private val model: HabitsAppModel) : ViewModel(), Coroutin
         coroutineContext.cancelChildren()
     }
 
-    fun getHabitFromFields(fieldsData: Map<String, String?>): HabitEntity{
-        return HabitEntity(fieldsData["name"],
-            fieldsData["description"],
-            fieldsData["priority"],
-            fieldsData["periodicity"],
-            fieldsData["type"])
+    fun getHabitFromFields(fieldsData: Map<String, String?>, id: String? = null, uid: String? = null): com.example.domainmodule.HabitEntity {
+        val frequency = fieldsData["periodicity"] ?: "0"
+        val habit = com.example.domainmodule.HabitEntity(
+            UUID.randomUUID().toString(),
+            fieldsData["name"] ?: "Без имени",
+            fieldsData["description"] ?: "Без описания",
+            com.example.domainmodule.enums.Priority.valueOf(fieldsData["priority"]!!),
+            frequency.toInt(),
+            com.example.domainmodule.enums.HabitType.valueOf(fieldsData["type"]!!)
+        )
+        if (id != null)
+            habit.id = id
+        if (uid != null)
+            habit.uid = uid
+        return habit
     }
 
-    fun GetHabitById(id: Int): LiveData<HabitEntity>{
-        return model.getHabitById(id)
+    fun GetHabitById(id: String): LiveData<com.example.domainmodule.HabitEntity>{
+        return useCases.getHabitById(id).asLiveData()
     }
 
-    fun addOrReplaceHabit(habit: HabitEntity, oldHabitEntity: HabitEntity? = null) = launch{
-        if (oldHabitEntity != null)
-            model.delete(oldHabitEntity)
-        model.insert(habit)
-    }
+    fun insertHabit(habit: com.example.domainmodule.HabitEntity) = launch{ useCases.insert(habit) }
 
-    fun deleteHabit(habit: HabitEntity) = launch { model.delete(habit) }
+    fun deleteHabit(habit: com.example.domainmodule.HabitEntity) = launch { useCases.delete(habit) }
 }

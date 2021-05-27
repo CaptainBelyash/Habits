@@ -9,10 +9,10 @@ class Pager2Adapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     override fun createFragment(position: Int): Fragment  = when (position){
         0 -> {
-            HabitsListFragment.newInstance("Хорошая")
+            HabitsListFragment.newInstance("Good")
         }
         else -> {
-            HabitsListFragment.newInstance("Плохая")
+            HabitsListFragment.newInstance("Bad")
         }
     }
 }

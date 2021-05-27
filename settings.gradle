@@ -1,0 +1,6 @@
+include ':DomainModule'
+include ':DataModule'
+include ':domain'
+include ':data'
+include ':app'
+rootProject.name = "Habits"

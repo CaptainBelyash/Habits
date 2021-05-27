@@ -2,15 +2,18 @@ package com.example.habitsapp.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.habitsapp.model.HabitsAppModel
-import com.example.habitsapp.model.database.HabitEntity
+import androidx.lifecycle.asLiveData
+import com.example.domainmodule.HabitEntity
+import com.example.domainmodule.HabitsUseCases
 
-class HomeViewModel(private val model: HabitsAppModel) : ViewModel() {
-    val habits: LiveData<List<HabitEntity>> = model.getHabits()
-
+class HomeViewModel(private val useCases: HabitsUseCases) : ViewModel() {
+    val habits: LiveData<List<HabitEntity>> = useCases.getHabits().asLiveData()
 
     fun getHabitsByType(filterRule: String): LiveData<List<HabitEntity>> {
-        return model.getHabitsByType(filterRule)
+        return useCases.getHabitsByType(filterRule).asLiveData()
     }
 
+    fun refresh(){
+        useCases.refresh()
+    }
 }

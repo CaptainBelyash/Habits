@@ -1,11 +1,13 @@
-package com.example.habitsapp.model.database
+package com.example.datamodule.database
 
 import android.content.Context
 import androidx.room.*
+import com.example.domainmodule.HabitEntity
 
 @Database(entities = [HabitEntity::class], version = 1)
-abstract class HabitsDB : RoomDatabase() {
-    abstract fun habitsDao(): HabitsDao
+@TypeConverters(Converters::class)
+abstract class HabitsDB : RoomDatabase(), IHabitsDatabase {
+    abstract override fun habitsDao(): HabitsDao
 
     companion object {
         @Volatile

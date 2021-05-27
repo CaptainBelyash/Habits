@@ -13,15 +13,31 @@
             android:layout_height="match_parent"
             android:layout_margin="16dp"
             android:orientation="vertical">
-        <TextView
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="horizontal">
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/title"
-
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:gravity="start"
+                android:layout_weight="3"
                 android:text="@string/main_title"
                 android:textSize="30sp"/>
+
+            <ImageButton
+                app:srcCompat="@drawable/ic_refresh"
+                app:backgroundTint="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/refresh_button"/>
+
+        </LinearLayout>
+
         <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
@@ -37,8 +53,6 @@
                 android:layout_weight="1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
-
-        <include layout="@layout/bottom_sheet"/>
 
     </LinearLayout>
 

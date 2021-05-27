@@ -6,22 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Spinner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.domainmodule.HabitEntity
+import com.example.habitsapp.MainActivity
 import com.example.habitsapp.R
-import com.example.habitsapp.model.HabitsAppModel
-import com.example.habitsapp.model.database.HabitEntity
-import com.example.habitsapp.model.database.HabitsDB
 import com.example.habitsapp.viewmodels.EditorViewModel
 import kotlinx.android.synthetic.main.fragment_editor.*
 
 
 class EditorFragment : Fragment() {
     private lateinit var editorViewModel: EditorViewModel
-    private var habitId: Int? = null
+    private var habitId: String? = null
+    private var habitUId: String? = null
     private var habit: HabitEntity? = null
 
     companion object {
@@ -30,15 +28,16 @@ class EditorFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val usecases = (requireActivity() as MainActivity).appComponent.getHabitsUseCases()
         super.onCreate(savedInstanceState)
         editorViewModel = ViewModelProvider(activity!!, object : ViewModelProvider.Factory{
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return EditorViewModel(HabitsAppModel.withDao(HabitsDB.getDatabase(requireContext()).habitsDao())) as T
+                return EditorViewModel(usecases) as T
             }
         }).get(EditorViewModel::class.java)
 
         arguments?.let {
-            habitId = it.getInt("habitId")
+            habitId = it.getString("habitId")
         }
     }
 
@@ -75,7 +74,7 @@ class EditorFragment : Fragment() {
 
     private fun initSaveButton(){
         save_fab.setOnClickListener {
-            editorViewModel.addOrReplaceHabit(editorViewModel.getHabitFromFields(getFields()), habit)
+            editorViewModel.insertHabit(editorViewModel.getHabitFromFields(getFields(), habitId, habitUId))
             findNavController().popBackStack()
         }
     }
@@ -90,28 +89,12 @@ class EditorFragment : Fragment() {
     private fun fitExistedData(){
         editorViewModel.GetHabitById(habitId!!).observe(viewLifecycleOwner){
             habit = it
+            habitUId = it.uid
             name_et.setText(it.name)
             description_et.setText(it.description)
-            priority_sp.setSelection(spinnerFitValue(priority_sp, it.priority))
-            periodicity_et.setText(it.periodicity)
-            radioGroupFitValue(type_rg, it.type)
-        }
-    }
-
-    private fun spinnerFitValue(spinner: Spinner, myString: String?): Int {
-        for (i in 0 until spinner.count)
-            if (spinner.getItemAtPosition(i).toString().equals(myString, ignoreCase = true))
-                return i
-        return 0
-    }
-
-    private fun radioGroupFitValue(rg: RadioGroup, myString: String?){
-        rg.check(rg.getChildAt(0).id)
-        for (i in 0 until rg.childCount) {
-            val rb = activity!!.findViewById<RadioButton>(rg.getChildAt(i).id)
-            if (rb.text.toString().equals(myString, ignoreCase = true)) {
-                rg.check(rb.id)
-            }
+            priority_sp.setSelection(it.priority.ordinal)
+            periodicity_et.setText(it.frequency.toString())
+            type_rg.check(type_rg.getChildAt(it.type.ordinal).id)
         }
     }
 }
