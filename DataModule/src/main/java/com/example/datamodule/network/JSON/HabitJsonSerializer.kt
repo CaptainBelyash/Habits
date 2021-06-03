@@ -4,8 +4,8 @@ import com.example.domainmodule.HabitEntity
 import com.google.gson.*
 import java.lang.reflect.Type
 
-class HabitJsonSerializer : JsonSerializer<com.example.domainmodule.HabitEntity> {
-    override fun serialize(src: com.example.domainmodule.HabitEntity, typeOfSrc: Type?, context: JsonSerializationContext?)
+class HabitJsonSerializer : JsonSerializer<HabitEntity> {
+    override fun serialize(src: HabitEntity, typeOfSrc: Type?, context: JsonSerializationContext?)
     : JsonElement {
         val jsonArray = JsonArray()
         for (doneData in src.doneDates)

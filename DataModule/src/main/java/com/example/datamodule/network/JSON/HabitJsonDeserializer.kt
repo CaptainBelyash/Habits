@@ -8,17 +8,17 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import java.lang.reflect.Type
 
-class HabitJsonDeserializer : JsonDeserializer<com.example.domainmodule.HabitEntity> {
-    override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): com.example.domainmodule.HabitEntity {
+class HabitJsonDeserializer : JsonDeserializer<HabitEntity> {
+    override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): HabitEntity {
         val jsonObj = json.asJsonObject
 
-        val habit = com.example.domainmodule.HabitEntity(
+        val habit = HabitEntity(
             jsonObj.get("uid").asString,
             jsonObj.get("title").asString,
             jsonObj.get("description").asString,
-            enumValues<com.example.domainmodule.enums.Priority>()[jsonObj.get("priority").asInt],
+            enumValues<Priority>()[jsonObj.get("priority").asInt],
             jsonObj.get("frequency").asInt,
-            enumValues<com.example.domainmodule.enums.HabitType>()[jsonObj.get("type").asInt]
+            enumValues<HabitType>()[jsonObj.get("type").asInt]
         )
         habit.uid = jsonObj.get("uid").asString
         return habit

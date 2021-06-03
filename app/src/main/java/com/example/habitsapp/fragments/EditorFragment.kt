@@ -22,6 +22,7 @@ class EditorFragment : Fragment() {
     private var habitUId: String? = null
     private var habit: HabitEntity? = null
 
+    
     companion object {
         @JvmStatic
         fun newInstance() = EditorFragment()
